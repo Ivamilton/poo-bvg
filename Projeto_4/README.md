@@ -1,104 +1,110 @@
-# **Projeto Avaliativo 4: Modularização, Modificadores de Acesso e Funções Amigas - C++**
+# Projeto Avaliativo 4 - Módulo de Auditoria de Transações Bancárias
 
-## **Objetivo**
+## Descrição
 
-Desenvolver um projeto prático em C++ que consolide os conhecimentos sobre modularização, modificadores de acesso (public, private, protected) e funções amigas. O tema escolhido terá utilidade prática para a vivência dos alunos de Análise e Desenvolvimento de Sistemas, reforçando conceitos fundamentais e sua aplicação no desenvolvimento de software.
+Este projeto implementa um módulo simples de auditoria de transações bancárias em C++, utilizando modularização, modificadores de acesso e função amiga.
 
----
+O sistema possui uma classe `ContaBancaria`, responsável por armazenar os dados básicos de uma conta bancária, e uma classe `Transacao`, responsável por representar uma tentativa de movimentação financeira.
 
-# 🎟️ Ticket #704: Módulo de Auditoria de Transações Bancárias (C++)
+A função amiga `validarTransacao` é utilizada para verificar se uma transação é segura, permitindo o acesso controlado ao saldo da conta e ao valor da transação.
 
-**De:** CTO / Arquiteto de Segurança (Professor)
+## Conceitos aplicados
 
-**Para:** Desenvolvedor Backend (Alunos)
+- Modularização com arquivos `.h` e `.cpp`;
+- Uso dos modificadores de acesso `private`, `protected` e `public`;
+- Encapsulamento de dados sensíveis;
+- Uso de função amiga `friend`;
+- Organização do código em múltiplos arquivos;
+- Representação da estrutura por meio de diagrama UML.
 
-**Projeto:** SecureBank Pro
+## Estrutura do projeto
 
-**Status:** `To Do` | **Prioridade:** `Crítica`
-
-##  Contexto
-
-Olá, time! No setor bancário, a integridade dos dados é nossa maior prioridade. Atualmente, temos o desafio de permitir que um sistema externo de **Auditoria** verifique se uma transação financeira é legítima, sem que os detalhes sensíveis da conta do cliente fiquem expostos para o resto do sistema.
-
-Nesta sprint, utilizaremos o conceito de **Funções Amigas (`friend`)** para dar permissão especial de acesso ao módulo de auditoria, e o modificador **`protected`** para organizar nossa hierarquia de contas, garantindo o encapsulamento exigido pelas normas bancárias.
-
----
-
-##  Critérios de Aceitação 
-
-### 1. Modularização e Encapsulamento
-
-O projeto deve ser estritamente modularizado em arquivos `.h` e `.cpp`.
-
-* **Classe `ContaBancaria`:** * `private`: `string titular` e `string cpf`.
-* `protected`: `double saldo`. (O uso de `protected` permitirá que futuras subclasses de investimento acessem o saldo diretamente).
-* `public`: Construtor e método para exibir dados básicos.
-
-
-* **Classe `Transacao`:**
-* Atributos privados: `double valor` e `string data`.
-
-
-
-### 2. Funções Amigas 
-
-Para validar se uma transação é segura (ex: o valor da transação não pode ser maior que o saldo atual), implemente uma **função amiga** chamada `validarTransacao`.
-
-* Essa função **não** deve ser membro de nenhuma das classes.
-* Ela deve receber como parâmetros um objeto `ContaBancaria` e um objeto `Transacao`.
-* Por ser `friend`, ela terá permissão de ler o `saldo` (da conta) e o `valor` (da transação) para realizar a lógica de auditoria.
-
-### 3. Implementação Técnica
-
-* O arquivo `main.cpp` deve simular a criação de uma conta e uma tentativa de transação, chamando a função amiga para validar o processo.
-
----
-
-##  Estrutura de Arquivos Exigida 
-
-Respeitando o padrão de organização de código e as regras de envio de PRs do repositório:
-
-```text
+```txt
 Projeto_4/
-│
 ├── docs/
-│   └── Diagrama_Auditoria_UML.png  # Diagrama com relações de amizade e visibilidade
-│
+│   └── Diagrama_Auditoria_UML.png
 ├── src/
-│   ├── ContaBancaria.h / .cpp      # Atributos private/protected
-│   ├── Transacao.h / .cpp          # Atributos private e declaração da friend function
-│   └── main.cpp                    # Orquestração do teste de auditoria
-│
-└── README.md                       # Explicação técnica de por que usar 'friend' neste caso
-
+│   ├── ContaBancaria.h
+│   ├── ContaBancaria.cpp
+│   ├── Transacao.h
+│   ├── Transacao.cpp
+│   └── main.cpp
+└── README.md
 ```
 
----
+## Classe ContaBancaria
 
-##  Fluxo de Entrega 
+A classe `ContaBancaria` representa uma conta bancária simples.
 
-1. **Modelagem:** Crie o diagrama UML destacando os modificadores de acesso: `-` para privado, `#` para protegido e `+` para público.
-2. **Desenvolvimento:** Siga as regras de indentação e nomenclatura do `CONTRIBUTING.md` do repositório.
-3. **Pull Request:** Submeta sua PR com o título: `Projeto_4 - [Seu Nome Completo]`. Na descrição, justifique o uso do modificador `protected` na classe `ContaBancaria`.
+Ela possui os atributos privados `titular` e `cpf`, pois são dados sensíveis da conta e não devem ser acessados diretamente fora da classe.
 
----
+O atributo `saldo` foi definido como `protected`, pois também é uma informação sensível, mas pode ser utilizado futuramente por subclasses, como contas especiais ou contas de investimento.
 
-##  Rubrica de Avaliação (Tech Lead Review)
+## Classe Transacao
 
-| Critério | Descrição | Pontuação |
-| --- | --- | --- |
-| **Modularização** | Divisão correta entre headers e sources com guardas de inclusão? | 2.5 pts |
-| **Modificadores de Acesso** | Uso correto de `private` para dados sensíveis e `protected` para o saldo? | 2.5 pts |
-| **Função Amiga** | A função `validarTransacao` foi declarada como `friend` e acessa os membros privados sem usar getters? | 3.0 pts |
-| **UML e Boas Práticas** | O diagrama representa fielmente a visibilidade dos atributos e a estrutura do código? | 2.0 pts |
+A classe `Transacao` representa uma tentativa de movimentação bancária.
 
-> **Dica de Segurança:** Embora a `friend function` quebre o encapsulamento, ela é uma ferramenta poderosa para acoplar módulos de forma controlada. Use-a apenas quando um acesso externo "íntimo" for estritamente necessário para a lógica de negócio, como em auditorias ou sobrecarga de operadores.
+Ela possui os atributos privados `valor` e `data`, garantindo que essas informações sejam protegidas contra acesso direto externo.
 
-## **Entrega**
+## Função amiga validarTransacao
 
-1. **Formato:**
-   - Carregue os arquivos no repositório da turma, na subpasta `/Projetos/Projeto_4`.
-   - Inclua o diagrama UML no formato `png` ou `jpg`.
+A função `validarTransacao` foi declarada como amiga das classes `ContaBancaria` e `Transacao`.
 
-2. **Prazo:**
-   - A entrega deve ser realizada em sete dias.
+Essa função não pertence diretamente a nenhuma das classes, mas recebe como parâmetros um objeto `ContaBancaria` e um objeto `Transacao`.
+
+Por ser uma função amiga, ela consegue acessar o atributo `saldo` da conta e o atributo `valor` da transação para verificar se a operação pode ser aprovada.
+
+## Justificativa do uso de friend
+
+O uso de `friend` foi escolhido porque a função `validarTransacao` representa um módulo externo de auditoria.
+
+Esse módulo precisa verificar informações internas das classes para validar uma transação, mas sem tornar esses dados públicos.
+
+Dessa forma, o sistema mantém o encapsulamento e permite um acesso controlado apenas para a função responsável pela auditoria.
+
+## Justificativa do uso de protected
+
+O atributo `saldo` foi declarado como `protected` para manter a proteção do dado contra acesso externo direto.
+
+Ao mesmo tempo, essa escolha permite que futuras classes derivadas de `ContaBancaria` possam acessar o saldo, caso seja necessário implementar novos tipos de conta.
+
+## Como compilar
+
+Para compilar o projeto, utilize o comando:
+
+```bash
+clang++ src/main.cpp src/ContaBancaria.cpp src/Transacao.cpp -o auditoria
+```
+
+Ou, se estiver usando `g++`:
+
+```bash
+g++ src/main.cpp src/ContaBancaria.cpp src/Transacao.cpp -o auditoria
+```
+
+## Como executar
+
+Após compilar, execute:
+
+```bash
+./auditoria
+```
+
+## Resultado esperado
+
+O programa cria uma conta bancária com saldo inicial de R$ 1000,00 e testa duas transações:
+
+1. Uma transação de R$ 250,00, que deve ser aprovada.
+2. Uma transação de R$ 1500,00, que deve ser recusada.
+
+A validação é feita pela função amiga `validarTransacao`, que compara o valor da transação com o saldo disponível da conta.
+
+## Diagrama UML
+
+O diagrama UML está localizado na pasta:
+
+```txt
+docs/Diagrama_Auditoria_UML.png
+```
+
+Ele representa as classes `ContaBancaria`, `Transacao` e a função amiga `validarTransacao`, destacando os modificadores de acesso e as relações de acesso da função amiga.
